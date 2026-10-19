@@ -1,7 +1,8 @@
 @startuml
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
-skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 50
 title Oficina Mecânica - MVC + Service Layer + DAO
 
 package "View (FXML)" {
@@ -115,18 +116,16 @@ package "Model" {
   }
 }
 
-package "Util / Exception" {
+package "Util" {
   class ConnectionFactory {
     +{static} getConnection(): Connection
   }
   class ErroSql {
     +{static} traduzir(operacao: String, e: SQLException): DAOException
   }
-  class DAOException
-  class ServiceException
 }
 
-database "PostgreSQL\n(oficina_db)" as BD
+class "PostgreSQL (oficina_db)" as BD <<database>>
 
 ' View -> Controller
 MainView --> MainController : fx:controller
@@ -168,10 +167,8 @@ ClienteDAOImpl ..> Cliente
 AtendimentoDAOImpl ..> Atendimento
 AtendimentoDAOImpl ..> Servico
 
-' Exceções
-ClienteDAOImpl ..> DAOException
-AtendimentoDAOImpl ..> DAOException
-ClienteService ..> ServiceException
-AtendimentoService ..> ServiceException
-RelatorioService ..> ServiceException
+note bottom of ErroSql
+  Os DAOs lançam DAOException e as Services lançam
+  ServiceException (pacote exception).
+end note
 @enduml
