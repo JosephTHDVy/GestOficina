@@ -1,0 +1,177 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+title Oficina Mecânica - MVC + Service Layer + DAO
+
+package "View (FXML)" {
+  class MainView <<FXML>>
+  class ClienteView <<FXML>>
+  class AtendimentoView <<FXML>>
+  class RelatorioView <<FXML>>
+}
+
+package "Controller" {
+  class MainController {
+    -initialize()
+  }
+  class ClienteController {
+    -buscar()
+    -novo()
+    -salvar()
+    -excluir()
+  }
+  class AtendimentoController {
+    -buscar()
+    -novo()
+    -salvar()
+    -excluir()
+    -finalizar()
+    -escolherFoto()
+    -adicionarServico()
+    -removerServico()
+  }
+  class RelatorioController {
+    -gerar()
+    -mesAtual()
+    -todoPeriodo()
+    -exportar()
+  }
+}
+
+package "Service" {
+  class ClienteService {
+    +salvar(c: Cliente)
+    +excluir(c: Cliente)
+    +buscarPorNome(nome: String): List<Cliente>
+    +listarTodos(): List<Cliente>
+    +totalGasto(clienteId: int): BigDecimal
+  }
+  class AtendimentoService {
+    +salvar(a: Atendimento, novaFoto: File)
+    +excluir(a: Atendimento)
+    +finalizar(id: int)
+    +buscarPorPlaca(placa: String): List<Atendimento>
+    +listarTodos(): List<Atendimento>
+    +listarEmAndamento(): List<Atendimento>
+    +obterFoto(a: Atendimento): File
+  }
+  class FotoService {
+    +salvar(origem: File): String
+    +excluir(caminho: String)
+    +obter(caminho: String): File
+  }
+  class RelatorioService {
+    +gerar(inicio: LocalDate, fim: LocalDate): Resumo
+    +exportarCsv(lista: List<Atendimento>, destino: File)
+  }
+}
+
+package "Model" {
+  class Cliente {
+    -id: Integer
+    -nome: String
+    -cpf: String
+    -telefone: String
+    -email: String
+  }
+  class Atendimento {
+    -id: Integer
+    -veiculoModelo: String
+    -veiculoPlaca: String
+    -caminhoFoto: String
+    -dataEntrada: LocalDateTime
+    -dataSaida: LocalDateTime
+    -observacoes: String
+    +getValorTotal(): BigDecimal
+    +isEmAndamento(): boolean
+  }
+  class Servico {
+    -id: Integer
+    -atendimentoId: Integer
+    -descricao: String
+    -valor: BigDecimal
+  }
+
+  package "Model.DAO" {
+    interface GenericDAO<T, ID> {
+      +inserir(obj: T)
+      +atualizar(obj: T)
+      +excluir(id: ID)
+      +buscarPorId(id: ID): T
+      +listarTodos(): List<T>
+    }
+    interface ClienteDAO {
+      +buscarPorNome(nome: String): List<Cliente>
+      +buscarPorCpf(cpf: String): Cliente
+    }
+    interface AtendimentoDAO {
+      +listarPorCliente(clienteId: int): List<Atendimento>
+      +buscarPorPlaca(placa: String): List<Atendimento>
+      +listarEmAndamento(): List<Atendimento>
+    }
+    class ClienteDAOImpl
+    class AtendimentoDAOImpl
+  }
+}
+
+package "Util / Exception" {
+  class ConnectionFactory {
+    +{static} getConnection(): Connection
+  }
+  class ErroSql {
+    +{static} traduzir(operacao: String, e: SQLException): DAOException
+  }
+  class DAOException
+  class ServiceException
+}
+
+database "PostgreSQL\n(oficina_db)" as BD
+
+' View -> Controller
+MainView --> MainController : fx:controller
+ClienteView --> ClienteController : fx:controller
+AtendimentoView --> AtendimentoController : fx:controller
+RelatorioView --> RelatorioController : fx:controller
+MainController ..> ClienteController : carrega
+MainController ..> AtendimentoController : carrega
+MainController ..> RelatorioController : carrega
+
+' Controller -> Service
+ClienteController --> ClienteService
+AtendimentoController --> AtendimentoService
+AtendimentoController --> ClienteService
+RelatorioController --> RelatorioService
+
+' Service -> Service / DAO
+RelatorioService --> AtendimentoService
+AtendimentoService --> FotoService
+ClienteService --> ClienteDAO
+ClienteService --> AtendimentoDAO
+AtendimentoService --> AtendimentoDAO
+
+' DAO
+ClienteDAO --|> GenericDAO
+AtendimentoDAO --|> GenericDAO
+ClienteDAOImpl ..|> ClienteDAO
+AtendimentoDAOImpl ..|> AtendimentoDAO
+ClienteDAOImpl ..> ConnectionFactory
+AtendimentoDAOImpl ..> ConnectionFactory
+ClienteDAOImpl ..> ErroSql
+AtendimentoDAOImpl ..> ErroSql
+ConnectionFactory ..> BD
+
+' Model
+Atendimento "*" --> "1" Cliente : cliente
+Atendimento "1" *-- "0..*" Servico : servicos
+ClienteDAOImpl ..> Cliente
+AtendimentoDAOImpl ..> Atendimento
+AtendimentoDAOImpl ..> Servico
+
+' Exceções
+ClienteDAOImpl ..> DAOException
+AtendimentoDAOImpl ..> DAOException
+ClienteService ..> ServiceException
+AtendimentoService ..> ServiceException
+RelatorioService ..> ServiceException
+@enduml

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.unicentro.oficina.controller.RelatorioController">
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <top>
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <padding>
+                <Insets bottom="12"/>
+            </padding>
+            <Label text="Período (data de entrada):"/>
+            <DatePicker fx:id="dtInicio" prefWidth="140"/>
+            <Label text="até"/>
+            <DatePicker fx:id="dtFim" prefWidth="140"/>
+            <Button text="Gerar resumo" onAction="#gerar" defaultButton="true"/>
+            <Button text="Este mês" onAction="#mesAtual"/>
+            <Button text="Todo o período" onAction="#todoPeriodo"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="14">
+            <HBox spacing="12">
+                <VBox spacing="2" style="-fx-border-color: #bbbbbb; -fx-padding: 10;" prefWidth="190">
+                    <Label text="Faturamento"/>
+                    <Label fx:id="lblFaturamento" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox spacing="2" style="-fx-border-color: #bbbbbb; -fx-padding: 10;" prefWidth="150">
+                    <Label text="Atendimentos"/>
+                    <Label fx:id="lblTotalAtendimentos" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox spacing="2" style="-fx-border-color: #bbbbbb; -fx-padding: 10;" prefWidth="150">
+                    <Label text="Em andamento"/>
+                    <Label fx:id="lblEmAndamento" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox spacing="2" style="-fx-border-color: #bbbbbb; -fx-padding: 10;" prefWidth="150">
+                    <Label text="Finalizados"/>
+                    <Label fx:id="lblFinalizados" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox spacing="2" style="-fx-border-color: #bbbbbb; -fx-padding: 10;" prefWidth="190">
+                    <Label text="Ticket médio"/>
+                    <Label fx:id="lblTicketMedio" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+            <Label text="Clientes que mais gastaram no período" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+            <TableView fx:id="tabelaRanking" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colRankCliente" text="Cliente" prefWidth="320"/>
+                    <TableColumn fx:id="colRankQtd" text="Atendimentos" prefWidth="120"/>
+                    <TableColumn fx:id="colRankTotal" text="Total gasto" prefWidth="140"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="12"/>
+            </padding>
+            <Button text="Exportar atendimentos do período (CSV)" onAction="#exportar"/>
+        </HBox>
+    </bottom>
+</BorderPane>

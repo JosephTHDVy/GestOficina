@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.unicentro.oficina.controller.AtendimentoController">
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <top>
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <padding>
+                <Insets bottom="10"/>
+            </padding>
+            <Label text="Buscar por placa:"/>
+            <TextField fx:id="txtBuscaPlaca" promptText="ABC-1234" prefWidth="160" onAction="#buscar"/>
+            <CheckBox fx:id="chkEmAndamento" text="Somente em andamento" onAction="#buscar"/>
+            <Button text="Buscar" onAction="#buscar"/>
+            <Button text="Limpar" onAction="#limparBusca"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabela">
+            <columns>
+                <TableColumn fx:id="colPlaca" text="Placa" prefWidth="85"/>
+                <TableColumn fx:id="colModelo" text="Veículo" prefWidth="140"/>
+                <TableColumn fx:id="colCliente" text="Cliente" prefWidth="150"/>
+                <TableColumn fx:id="colEntrada" text="Entrada" prefWidth="120"/>
+                <TableColumn fx:id="colSaida" text="Saída" prefWidth="120"/>
+                <TableColumn fx:id="colTotal" text="Total" prefWidth="95"/>
+                <TableColumn fx:id="colStatus" text="Situação" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <right>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="450">
+            <VBox spacing="6">
+                <padding>
+                    <Insets top="0" right="12" bottom="8" left="14"/>
+                </padding>
+
+                <Label text="Dados do atendimento" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+
+                <Label text="Cliente *"/>
+                <ComboBox fx:id="cmbCliente" maxWidth="Infinity"/>
+
+                <HBox spacing="8">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Modelo do veículo *"/>
+                        <TextField fx:id="txtModelo"/>
+                    </VBox>
+                    <VBox spacing="6" prefWidth="110">
+                        <Label text="Placa *"/>
+                        <TextField fx:id="txtPlaca" promptText="ABC1D23"/>
+                    </VBox>
+                </HBox>
+
+                <Label text="Entrada (data e hora) *"/>
+                <HBox spacing="8">
+                    <DatePicker fx:id="dtEntrada" prefWidth="170"/>
+                    <TextField fx:id="txtEntradaHora" promptText="HH:mm" prefWidth="70"/>
+                </HBox>
+
+                <Label text="Saída (vazio = em andamento)"/>
+                <HBox spacing="8">
+                    <DatePicker fx:id="dtSaida" prefWidth="170"/>
+                    <TextField fx:id="txtSaidaHora" promptText="HH:mm" prefWidth="70"/>
+                </HBox>
+
+                <Label text="Foto do veículo"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <StackPane prefWidth="260" prefHeight="160" minWidth="260" minHeight="160"
+                               style="-fx-border-color: #999999; -fx-background-color: #f2f2f2;">
+                        <Label text="Sem foto"/>
+                        <ImageView fx:id="imgFoto" fitWidth="260" fitHeight="160" preserveRatio="true"/>
+                    </StackPane>
+                    <Button text="Escolher foto..." onAction="#escolherFoto"/>
+                </HBox>
+
+                <Label text="Observações"/>
+                <TextArea fx:id="txtObservacoes" prefRowCount="2" wrapText="true"/>
+
+                <Label text="Trabalhos realizados" style="-fx-font-weight: bold;"/>
+                <TableView fx:id="tabelaServicos" prefHeight="130">
+                    <columns>
+                        <TableColumn fx:id="colServicoDescricao" text="Descrição" prefWidth="260"/>
+                        <TableColumn fx:id="colServicoValor" text="Valor" prefWidth="100"/>
+                    </columns>
+                </TableView>
+                <HBox spacing="6">
+                    <TextField fx:id="txtServicoDescricao" promptText="Descrição do serviço" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="txtServicoValor" promptText="Valor" prefWidth="80"
+                               onAction="#adicionarServico"/>
+                </HBox>
+                <HBox spacing="6">
+                    <Button text="Adicionar serviço" onAction="#adicionarServico"/>
+                    <Button text="Remover selecionado" onAction="#removerServico"/>
+                </HBox>
+                <Label fx:id="lblTotal" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+
+                <HBox spacing="8">
+                    <padding>
+                        <Insets top="8"/>
+                    </padding>
+                    <Button text="Novo" onAction="#novo"/>
+                    <Button text="Salvar" onAction="#salvar"/>
+                    <Button fx:id="btnFinalizar" text="Registrar saída agora" onAction="#finalizar"/>
+                    <Button fx:id="btnExcluir" text="Excluir" onAction="#excluir"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </right>
+</BorderPane>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.unicentro.oficina.controller.ClienteController">
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <top>
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <padding>
+                <Insets bottom="10"/>
+            </padding>
+            <Label text="Buscar por nome:"/>
+            <TextField fx:id="txtBusca" promptText="Digite o nome" prefWidth="260" onAction="#buscar"/>
+            <Button text="Buscar" onAction="#buscar"/>
+            <Button text="Limpar" onAction="#limparBusca"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabela">
+            <columns>
+                <TableColumn fx:id="colNome" text="Nome" prefWidth="220"/>
+                <TableColumn fx:id="colCpf" text="CPF" prefWidth="130"/>
+                <TableColumn fx:id="colTelefone" text="Telefone" prefWidth="120"/>
+                <TableColumn fx:id="colEmail" text="E-mail" prefWidth="200"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <right>
+        <VBox spacing="6" prefWidth="300">
+            <padding>
+                <Insets left="14"/>
+            </padding>
+            <Label text="Dados do cliente" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+            <Label text="Nome *"/>
+            <TextField fx:id="txtNome"/>
+            <Label text="CPF *"/>
+            <TextField fx:id="txtCpf" promptText="000.000.000-00"/>
+            <Label text="Telefone"/>
+            <TextField fx:id="txtTelefone" promptText="(00) 00000-0000"/>
+            <Label text="E-mail"/>
+            <TextField fx:id="txtEmail"/>
+            <HBox spacing="8">
+                <padding>
+                    <Insets top="10"/>
+                </padding>
+                <Button text="Novo" onAction="#novo"/>
+                <Button text="Salvar" onAction="#salvar" defaultButton="true"/>
+                <Button fx:id="btnExcluir" text="Excluir" onAction="#excluir"/>
+            </HBox>
+            <Label fx:id="lblTotalGasto" style="-fx-font-weight: bold;">
+                <padding>
+                    <Insets top="14"/>
+                </padding>
+            </Label>
+        </VBox>
+    </right>
+</BorderPane>
